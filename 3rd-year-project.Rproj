@@ -1,13 +1,34 @@
-Version: 1.0
+---
+title: "Fish Stomach Records"
+author: "Maisie Beckett"
+date: "27/10/2020"
+output: html_document
+---
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+library("ggmap")
+library("ggplot2")
+library("knitr")
+library("formatR")
+opts_chunk$set(tidy.opts=list(width.cutoff=66),tidy=TRUE)
+```
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+## Fish Stomach Records
+
+In this document I will be looking at the DAPSTOM database by the people at CEFAS. It can be found at <https://figshare.com/articles/dataset/Full_Archive/3529112>, and is an ongoing initiative to digitise and make available fish stomach records spanning the past 100 years. 
+
+In order to analyse this data, I first need to read the csv file into R.
+
+```{r, warning = FALSE}
+Fish <- read.csv("cefas_arctic_cruises_and_catches_1930_1959.csv")
+```
+
+Next, I will make a plot of the shot depth against the catch weight, to see if the depth at which they fish has an affect on the amount of fish caught.
+
+
+```{r pressure, echo=FALSE}
+ggplot(data = Fish) + geom_point(mapping = aes(x = ShotDepth, y = CatchWeight))
+```
