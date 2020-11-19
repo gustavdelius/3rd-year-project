@@ -65,3 +65,15 @@ y = Predator)) + scale_x_log10()
 
 
 This is a very busy plot as there are many different predators. Therefore, this graph is not very useful for coming to conclusions.
+
+## Trying to Recreate Graphs from Costa Paper
+I have found a paper by Gabriel C. Costa which uses the data set by Barnes.It looks at predator size, prey size, and dietary niche breadth relationships in marine predators.
+
+In order to minimise the issue of nonindependence among the sample points, Costa summarised the diet data by species and conducted a species-specific analysis which he describes in his paper. I am going to try to do a similar thing. 
+First I will remove species with small sample sizes (<10 individuals) and larval stages. This reduces the data set to 55 species, this will reduce bias. I also need to summarise the data by species.
+
+``` {r}
+table(PredPrey$Predator)
+PredPrey2 <- PredPrey[c(4,25,28,45)]
+PredPrey2 <- PredPrey2[PredPrey2$Predator %in% names(which(table(PredPrey2$Predator) >= 10)), ]
+table(PredPrey2$Predator)
