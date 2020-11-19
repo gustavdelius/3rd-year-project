@@ -76,9 +76,21 @@ First I will remove species with small sample sizes (<10 individuals) and larval
 ``` {r}
 #selecting just the predator and prey names, predator lifestage and their mass ratio
 PredPrey2 <- PredPrey[c(4,7,25,28,45)]
+<<<<<<< HEAD
 #filtering this data to only include predators with more than 10 individuals, and past the larva lifestage
 PredPrey2 <- filter(PredPrey2, Predator.lifestage != "larva")
 PredPrey2 <- PredPrey2[PredPrey2$Predator %in% names(which(table(PredPrey2$Predator) > 10)), ]
 #just checking the data selected gives 55 species
 table(PredPrey2$Predator)
 ```
+=======
+
+#filtering this data to only include predators with more than 10 individuals, and past the larva lifestage
+PredPrey2 <- filter(PredPrey2, Predator.lifestage != "larva")
+PredPrey2 <- PredPrey2[PredPrey2$Predator %in% names(which(table(PredPrey2$Predator) > 10)), ]
+
+#just checking the data selected gives 55 species
+table(PredPrey2$Predator)
+
+```
+>>>>>>> 9da024e04374a5c03418bc68694943e8e83e360f
