@@ -1,0 +1,97 @@
+---
+title: "Figure 2 from Costa's Paper"
+author: "Maisie Beckett"
+date: "25/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+library("ggmap")
+library("ggplot2")
+library("knitr")
+library("formatR")
+library("tikzDevice")
+library("Hmisc")
+library("dplyr")
+library("hrbrthemes")
+opts_chunk$set(tidy.opts=list(width.cutoff=66),tidy=TRUE)
+```
+
+```{r, warning = FALSE}
+PredPrey <- read.csv("Predator_and_prey_body_sizes_in_marine_food_webs_vsn4.csv")
+PredPrey2 <- PredPrey[c(4,7,25,28,45)]
+PredPrey2 <- filter(PredPrey2, Predator.lifestage != "larva")
+PredPrey2 <- PredPrey2[PredPrey2$Predator %in% names(which(table(PredPrey2$Predator) > 10)), ]
+```
+
+```{r}
+PredPrey$Prey.mass[PredPrey$Prey.mass.unit == "mg"] <- (PredPrey$Prey.mass[PredPrey$Prey.mass.unit == "mg"])/1000
+PredPrey$Prey.mass.unit[PredPrey$Prey.mass.unit == "mg"] <- "g"
+```
+
+```{r}
+OLS <- lm(log10(Prey.mass)~log10(Predator.mass), data=PredPrey)
+summary(OLS)
+```
+
+```{r}
+ggplot(data = PredPrey,aes(x = Predator.mass,
+y = Prey.mass)) + geom_point(size=0.005) + scale_x_log10() + scale_y_log10() + xlab("log(predator mass)") + ylab("log(prey mass)") + geom_smooth(method='lm') 
+```
+
+```{r}
+ggplot(data = PredPrey, aes(x = Predator.length, y = Prey.length)) + geom_point(size = 0.2) + scale_x_log10() + scale_y_log10() + xlab("log(predator length)") + ylab("log(prey length)") + geom_smooth(colour = 'red', fill = 'blue')
+```
+Looking at the graph above, there seems to be a relationship between the length of a predator and the prey they eat. However there appears to be some anomalies with the smaller predators eating larger prey, I will look into this. The confidence interval is also larger for the predators with the biggest length as there is less data for these.
+
+```{r}
+Rhiz <- filter(PredPrey, Predator == "Rhizoprionodon terraenovae")
+ggplot(data = Rhiz, aes(x = Predator.length, y = Prey.length)) + geom_point(alpha = 0.25, size = 2) + scale_x_log10() + 
+  scale_y_log10() + xlab("log of the Rhizoprionodon terraenovae lengths") + ylab("log(Prey length") + geom_smooth(colour = 'red', fill = 'blue')
+```
+
+
+```{r}
+ggplot(data = PredPrey) + geom_boxplot(mapping = aes(x = Prey.length, y = Predator)) + scale_x_log10() 
+```
+
+Let's look at the box plot for just 5 of these predators, let's choose the first 5 alphabetically.
+
+```{r}
+PredPrey3 <- PredPrey[c(4, 9, 28, 31)]
+PredPrey3 <- filter(PredPrey3, Predator == c("Acanthocepola sp.", "Ammodytes hexapterus", "Anarhichas lupus", "Anarhichas minor", "Aspitrigla cuculus"))
+ggplot(data = PredPrey3) + geom_boxplot(mapping = aes(x = Prey.length, y = Predator)) + scale_x_log10() 
+```
+
+From this box plot we can see that Acanthocepola sp. eat the smallest variety of prey sizes, opting for the longest, while Ammodytes hexapterus often opt for the shortest, but there is more variation in their diet as shown by the interquartile range of the box. The median values of Aspitrigla cuculus, Anarhichas minor and Anarhichas lupus appear to all be similar, showing that, on average they eat the same sized prey, with Aspitrigla cuculus having the most variation in this and Anarhichas lupus having the least. 
+
+
+
+First, just work with data with mm as the units.
+```{r}
+PredPrey <- filter(PredPrey, Predator.length.unit == "mm")
+PredPrey <- filter(PredPrey, Prey.length.unit == "mm")
+PredPrey$Predator.length.cat <- cut(PredPrey$Predator.length, c(0,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500))
+ggplot(data=PredPrey) + geom_boxplot(mapping=aes(x=Prey.length, y=Predator.length.cat)) + scale_x_log10()
+
+summary(PredPrey$Predator.length.cat)
+```
+Summary shows that there's less data for predators over 1100mm, so I will combine these into 1 group.
+
+```{r}
+PredPrey <- filter(PredPrey, Predator.length.unit == "mm")
+PredPrey <- filter(PredPrey, Prey.length.unit == "mm")
+PredPrey$Predator.length.cat <- cut(PredPrey$Predator.length, c(0,100,200,300,400,500,600,700,800,900,1000,1100,1500))
+ggplot(data=PredPrey) + geom_boxplot(mapping=aes(x=Prey.length, y=Predator.length.cat))
+
+summary(PredPrey$Predator.length.cat)
+
+```
+The boxplot above shows that the mean prey length for predators of any size is between 0 and 120. It also suggests that, usually, predators eat prey that are smaller than them, however there are exceptions to this in predators up to 500mm. Looking at the predators between 100mm and 200mm, there are some predators that appear to eat prey that are longer than them (up to 250mm).There are also some predators between 200mm and 300mm that eat prey up to 400mm, predators between 300mm and 400mm that eat prey up to around 450mm and one predator between 400mm and 500mm that eats a prey of around 650mm. I will look into these predators and prey, and try to identify reasons why they may be eating prey longer than them. I will also research why there is not much variation between the mean length of the prey eaten for different lengths of prey.
+
+Look at the graph from earlier again, the relationship is now completely positive, showing the anomalies were as a result of the different units being used for length.
+```{r}
+ggplot(data = PredPrey, aes(x = Predator.length, y = Prey.length)) + geom_point(size = 0.2) + scale_x_log10() + scale_y_log10() + xlab("log(predator length)") + ylab("log(prey length)") + geom_smooth(colour = 'red', fill = 'blue')
+```
