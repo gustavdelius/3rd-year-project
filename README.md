@@ -75,7 +75,7 @@ PredPrey[,c(63, 64)] <- log10(PredPrey[,c(63, 64)])
 ggplot(data = PredPrey, aes(x = logpredmass, y = logpreymass)) + geom_point(size = 0.2) + xlab("log(Predator Mass (g))") + ylab("log(Prey Mass (g))") + geom_smooth(colour = 'red', fill = 'blue')
 ```
 
-#Results
+# Results
 ## Lengths of Marine Animals
 ### Figure 4
 ```{r}
