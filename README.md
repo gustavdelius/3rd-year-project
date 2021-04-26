@@ -104,6 +104,36 @@ scatterplot <- qplot(x=logpredlength, y=logratio, data=PredPrey, size=I(0.2))
 scatterplot + geom_abline(aes(intercept=intercept, slope=slope,
   colour=quantile), data=quantile.regressions, size=1.5) + xlab("log(Predator Length (mm))") + ylab("log(Prey Length/Predator Length)")
 ```
+
+#### Alternative Code for Figure 6
+```{r}
+model.rq <- rq(logratio ~ logpredlength, PredPrey, tau=c(0.1, 0.9))
+quantile.regressions <- data.frame(t(coef(model.rq)))
+colnames(quantile.regressions) <- c("intercept", "slope")
+quantile.regressions$quantile <- rownames(quantile.regressions)
+quantile.regressions
+
+scatterplot <- qplot(x=logpredlength, y=logratio, data=PredPrey, size=I(0.2))
+scatterplot + geom_abline(aes(intercept=intercept, slope=slope,
+  colour=quantile), data=quantile.regressions, size=1.5) + xlab("log(Predator Length (mm))") + ylab("log(Prey Length/Predator Length)")
+
+model.rq1 <- rq(logratio ~ logpredlength, PredPrey, tau=c(0.1))
+quantile.regressions1 <- data.frame(t(coef(model.rq1)))
+colnames(quantile.regressions1) <- c("intercept", "slope")
+quantile.regressions1$quantile <- rownames(quantile.regressions1)
+quantile.regressions1
+ressq1 <- (model.rq1$residuals)^2
+sum1 <- sum(ressq1)
+
+model.rq2 <- rq(logratio ~ logpredlength, PredPrey, tau=c(0.9))
+quantile.regressions2 <- data.frame(t(coef(model.rq2)))
+colnames(quantile.regressions2) <- c("intercept", "slope")
+quantile.regressions2$quantile <- rownames(quantile.regressions2)
+quantile.regressions2
+ressq2 <- (model.rq2$residuals)^2
+sum2 <- sum(ressq2) 
+```
+
 ### Figure 7
 ```{r}
 model <- lm(logratio ~ logpredlength, data = PredPrey)
