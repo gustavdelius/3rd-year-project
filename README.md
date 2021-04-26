@@ -59,6 +59,10 @@ PredPrey$Predator.length.unit[PredPrey$Predator.length.unit == "cm"] <- "mm"
 
 ## Figure 2
 ```{r}
+PredPrey$logpredlength <- PredPrey$Predator.length
+PredPrey$logpreylength <- PredPrey$Prey.length
+PredPrey[,c(61, 62)] <- log10(PredPrey[,c(61, 62)])
+
 ggplot(data = PredPrey, aes(x = logpredlength, y = logpreylength)) + geom_point(size = 0.2) + xlab("log(Predator Length (mm))") + ylab("log(Prey Length (mm))") + geom_smooth(colour = 'red', fill = 'blue')
 ```
 
