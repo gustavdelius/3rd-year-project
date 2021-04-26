@@ -317,7 +317,7 @@ scatterplot + xlab("log(Predator Mass (g))") + ylab("Residuals") + geom_hline(yi
 ```
 
 
-### Figure 18
+### Figure 17
 ```{r}
 model.rq <- rq(logmassratio ~ logpredmass, PredPrey, tau=c(0.1, 0.9))
 quantile.regressions <- data.frame(t(coef(model.rq)))
@@ -330,7 +330,7 @@ scatterplot + geom_abline(aes(intercept=intercept, slope=slope,
   colour=quantile), data=quantile.regressions, size=1.5) + xlab("log(Predator Mass (g))") + ylab("log(Prey Mass/Predator Mass)")
 ```
 
-#### Alternative code for Figure 18
+#### Alternative code for Figure 17
 ```{r}
 model.rq <- rq(logmassratio ~ logpredmass, PredPrey, tau=c(0.1, 0.9))
 quantile.regressions <- data.frame(t(coef(model.rq)))
@@ -359,7 +359,7 @@ ressq2 <- (model.rq2$residuals)^2
 sum2 <- sum(ressq2) 
 ```
 
-### Figure 20
+### Figure 19
 ```{r}
 PredPrey5 <- PredPrey[c(4, 21, 28, 41, 63, 64)]
 PredPrey5 <- filter(PredPrey5, Predator == c("Lampanyctus crocodilus", "Merluccius bilinearis", "Thunnus alalunga ", "Gadus morhua", "Thunnus thynnus"))
