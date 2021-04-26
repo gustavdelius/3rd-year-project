@@ -305,19 +305,7 @@ ggplot(data = PredPrey, aes(x=logmassratio)) + geom_histogram(aes(y=stat(count) 
 
 ggplot(PredPrey, aes(logmassratio)) + stat_ecdf(size = 1.25, color = "red") + scale_y_continuous(labels = scales::percent) + xlab("Prey Mass/Predator Mass") + ylab("Cumulative Frequency (%)")
 ```
-
 ### Figure 16
-```{r}
-model2 <- lm(logmassratio ~ logpredmass, data = PredPrey)
-ols_plot_resid_qq(model2)
-
-model2.res = resid(model2)
-scatterplot <- qplot(x=PredPrey$logpredmass, y=model2.res,  size=I(0.2))
-scatterplot + xlab("log(Predator Mass (g))") + ylab("Residuals") + geom_hline(yintercept=0, color="red", size=1.2)
-```
-
-
-### Figure 17
 ```{r}
 model.rq <- rq(logmassratio ~ logpredmass, PredPrey, tau=c(0.1, 0.9))
 quantile.regressions <- data.frame(t(coef(model.rq)))
@@ -330,7 +318,7 @@ scatterplot + geom_abline(aes(intercept=intercept, slope=slope,
   colour=quantile), data=quantile.regressions, size=1.5) + xlab("log(Predator Mass (g))") + ylab("log(Prey Mass/Predator Mass)")
 ```
 
-#### Alternative code for Figure 17
+#### Alternative code for Figure 16
 ```{r}
 model.rq <- rq(logmassratio ~ logpredmass, PredPrey, tau=c(0.1, 0.9))
 quantile.regressions <- data.frame(t(coef(model.rq)))
@@ -358,6 +346,17 @@ quantile.regressions2
 ressq2 <- (model.rq2$residuals)^2
 sum2 <- sum(ressq2) 
 ```
+
+### Figure 17
+```{r}
+model2 <- lm(logmassratio ~ logpredmass, data = PredPrey)
+ols_plot_resid_qq(model2)
+
+model2.res = resid(model2)
+scatterplot <- qplot(x=PredPrey$logpredmass, y=model2.res,  size=I(0.2))
+scatterplot + xlab("log(Predator Mass (g))") + ylab("Residuals") + geom_hline(yintercept=0, color="red", size=1.2)
+```
+
 
 ### Figure 19
 ```{r}
