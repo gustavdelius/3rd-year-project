@@ -553,7 +553,7 @@ I used the tables showing the intercept, slope and quantile for each species to 
 
 
 ### Figure 21
-I combined this graphs like I did for figure 15
+I combined these graphs like I did for figure 15
 ```{r}
 ggplot(data = PredPrey5, aes(x=logmassratio)) + geom_histogram(aes(y=stat(count) / sum(count)), binwidth = 0.2, colour="black", fill="white") + scale_y_continuous(labels = scales::percent) + ylab("Relative Frequency (%)") + xlab("log(Prey Mass/Predator Mass)") + facet_wrap(~ Predator)
 ggplot(PredPrey5, aes(logmassratio)) + stat_ecdf(size = 1.25, color = "red") + scale_y_continuous(labels = scales::percent) + xlab("log(Prey Mass/Predator Mass)") + ylab("Cumulative Frequency (%)") + facet_wrap(~ Predator)
